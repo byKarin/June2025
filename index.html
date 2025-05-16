@@ -1,55 +1,25 @@
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flipbook Karin</title>
-  <style>
-    body {
-      margin: 0;
-      background: #333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    #flipbook {
-      width: 90%;
-      height: 90vh;
-    }
-    .page img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  </style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/turn.js@4/turn.min.css">
-</head>
-<body>
-  <div id="flipbook"></div>
+name: Deploy to GitHub Pages
 
-  <script src="https://cdn.jsdelivr.net/npm/turn.js@4/turn.min.js"></script>
-  <script>
-    const flipbook = document.getElementById("flipbook");
+on:
+  push:
+    branches:
+      - main
 
-    for (let i = 1; i <= 36; i++) {
-      const page = document.createElement("div");
-      page.className = "page";
-      const img = document.createElement("img");
-      img.setAttribute("loading", "lazy");
-      img.src = `images/page${i}.jpg`;
-      page.appendChild(img);
-      flipbook.appendChild(page);
-    }
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    turn("#flipbook", {
-      width: window.innerWidth * 0.9,
-      height: window.innerHeight * 0.9,
-      autoCenter: true,
-      duration: 1200,
-      sound: true,
-    });
-  </script>
-</body>
-</html>
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2
